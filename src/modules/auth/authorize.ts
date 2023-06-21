@@ -1,4 +1,4 @@
-import { UserEntity } from 'modules/user/user.entity';
+import { User } from 'modules/user/user.schema';
 import { UserAccessRole } from 'modules/user/user.interface';
 
 /**
@@ -30,6 +30,6 @@ export function isAdmin(accessRole: UserAccessRole): boolean {
  * @param accessRole
  * @return boolean
  */
-export function isSuperAdmin({ accessRole }: UserEntity): boolean {
+export function isSuperAdmin({ accessRole }: User): boolean {
   return accessRole === UserAccessRole.SuperAdmin;
 }

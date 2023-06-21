@@ -9,8 +9,8 @@ import { DB_CONNECTION } from 'core/environments';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(DB_CONNECTION),
     GraphQLModule.forRoot(GraphQLConfig),
+    MongooseModule.forRoot(DB_CONNECTION),
     UserModule,
     AuthModule,
   ],

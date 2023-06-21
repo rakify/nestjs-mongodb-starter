@@ -1,11 +1,11 @@
 import { Model } from 'mongoose';
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserEntity } from './user.entity';
-import { InjectModel } from '@nestjs/mongoose';
+import { User } from './user.schema';
 import { constant } from 'core/default';
 import { AuthService } from 'modules/auth/auth.service';
 import { IUserAccessTokenPayload } from './user.interface';
@@ -17,8 +17,7 @@ import { RegisterUserInput } from './dto/register-user.input';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(UserEntity.name)
-    private userModel: Model<UserEntity>,
+    @Inject('USER') private readonly userModel: Model<User>,
     private readonly authService: AuthService,
   ) {}
 
@@ -85,21 +84,17 @@ export class UserService {
     };
   }
 
-  async getCurrentUser(reqUser: UserEntity): Promise<ReturnUserData> {
+  async getCurrentUser(reqUser: User): Promise<ReturnUserData> {
     return reqUser;
   }
 
   // update user by id when user exists
   async updateUserPersonalInfo(
-    id: string,
     input: UpdateUserPersonalInfoInput,
-    reqUser: UserEntity,
+    reqUser: User,
   ) {
-    if (reqUser['_id'] !== id)
-      throw new BadRequestException(constant.UNAUTHORIZED_OWNER_MESSAGE);
-
     const updatedUser = await this.userModel.findOneAndUpdate(
-      { _id: id },
+      { _id: reqUser._id },
       input,
       { new: true },
     );
@@ -114,12 +109,12 @@ export class UserService {
   }
 
   // find user by email when user exists
-  async findByEmail(email: string): Promise<UserEntity | null> {
+  async findByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({ email: email }).exec();
   }
 
   // find user by id when user exists
-  async findbyId(id: string): Promise<UserEntity | null> {
+  async findbyId(id: string): Promise<User | null> {
     return await this.userModel.findById(id).exec();
   }
 }

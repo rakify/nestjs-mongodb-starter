@@ -1,8 +1,8 @@
 import { Field, ObjectType, OmitType } from '@nestjs/graphql';
-import { UserEntity } from '../user.entity';
+import { User } from '../user.schema';
 
 @ObjectType()
-export class ReturnUserData extends OmitType(UserEntity, [
+export class ReturnUserData extends OmitType(User, [
   'password',
   'isActive',
 ] as const) {}

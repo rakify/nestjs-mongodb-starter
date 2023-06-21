@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { UserEntity } from 'modules/user/user.entity';
+import { User } from 'modules/user/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'modules/user/user.service';
 
@@ -20,8 +20,9 @@ export class AuthGuard implements CanActivate {
     const result = await this.jwtService.verifyAsync(token);
     if (!result) return false;
 
-    const user: UserEntity | undefined | null =
-      await this.userService.findByEmail(result['email']);
+    const user: User | undefined | null = await this.userService.findByEmail(
+      result['email'],
+    );
     // Checking if the user exists and isActive
     if (user && !user.isActive) return false;
 

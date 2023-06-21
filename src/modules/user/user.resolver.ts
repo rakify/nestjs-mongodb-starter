@@ -1,10 +1,10 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { constant } from 'core/default';
 import { UserService } from './user.service';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'modules/auth/guards/auth.guard';
 import { CurrentUser } from 'modules/auth/decorator/current-user.decoder';
-import { UserEntity } from './user.entity';
+import { User } from './user.schema';
 // DTOS
 import { RegisterResponseDTO } from './dto/register-response.dto';
 import { RegisterUserInput } from './dto/register-user.input';
@@ -39,7 +39,7 @@ export class UserResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => ReturnUserData)
-  async getLoggedUser(@CurrentUser() reqUser: UserEntity) {
+  async getLoggedUser(@CurrentUser() reqUser: User) {
     return this.userService.getCurrentUser(reqUser);
   }
 
@@ -49,11 +49,10 @@ export class UserResolver {
     description: 'to update user personal informations',
   })
   updateUserPersonalInfo(
-    @Args('id', { type: () => ID }) id: string,
     @Args('input') input: UpdateUserPersonalInfoInput,
-    @CurrentUser() reqUser: UserEntity,
+    @CurrentUser() reqUser: User,
   ): Promise<UpdateUserResponseDTO> {
-    return this.userService.updateUserPersonalInfo(id, input, reqUser);
+    return this.userService.updateUserPersonalInfo(input, reqUser);
   }
   // logout from the system
   @Query(() => LogOutUserDTO, { description: 'logout to the system' })
