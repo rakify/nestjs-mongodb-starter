@@ -1,17 +1,16 @@
 import { Seeder, DataFactory } from 'nestjs-seeder';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
-import { UserEntity } from 'modules/user/user.entity';
 import { DEFAULT_ADMIN_EMAIL } from 'core/environments';
 import { UserAccessRole } from 'modules/user/user.interface';
+import { User } from 'modules/user/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export default class GlobalSeeder implements Seeder {
   constructor(
-    @InjectModel('UserEntity')
-    private readonly userModel: Model<UserEntity>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async seed(): Promise<any> {
@@ -30,7 +29,7 @@ export default class GlobalSeeder implements Seeder {
     // Reserved account
     const ADMIN = uuid();
 
-    const adminData = DataFactory.createForClass(UserEntity).generate(1, {
+    const adminData = DataFactory.createForClass(User).generate(1, {
       id: ADMIN,
       firstName: 'Rakib',
       lastName: 'Miah',
@@ -42,7 +41,7 @@ export default class GlobalSeeder implements Seeder {
 
     // Generate user seeds with accessRole of customer and save to database
     for (let i = 0; i < customerIdsLength; i++) {
-      const userData = DataFactory.createForClass(UserEntity).generate(1, {
+      const userData = DataFactory.createForClass(User).generate(1, {
         id: customerIds[i],
         accessRole: UserAccessRole.Customer,
       });
@@ -51,7 +50,7 @@ export default class GlobalSeeder implements Seeder {
 
     // Generate user seeds with accessRole of salesman and save to database
     for (let i = 0; i < salesmanIdsLength; i++) {
-      const userData = DataFactory.createForClass(UserEntity).generate(1, {
+      const userData = DataFactory.createForClass(User).generate(1, {
         id: salesmanIds[i],
         accessRole: UserAccessRole.Salesman,
       });
@@ -60,7 +59,7 @@ export default class GlobalSeeder implements Seeder {
 
     // Generate user seeds with accessRole of admin and save to database
     for (let i = 0; i < adminIdsLength; i++) {
-      const userData = DataFactory.createForClass(UserEntity).generate(1, {
+      const userData = DataFactory.createForClass(User).generate(1, {
         id: adminIds[i],
         accessRole: UserAccessRole.Admin,
       });
