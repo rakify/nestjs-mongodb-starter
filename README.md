@@ -20,7 +20,7 @@ and run this project with this script:
 
 ## seed
 
-before starting seeding procedure make sure your migration run is successful and project is built, then run this script:
+before starting seeding procedure make sure your project is built, then run this script:
 
 `npm run seed`
 
