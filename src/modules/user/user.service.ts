@@ -1,11 +1,11 @@
-import { InjectRepository } from '@nestjs/typeorm';
+import { Model } from 'mongoose';
 import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserEntity } from './user.entity';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
 import { constant } from 'core/default';
 import { AuthService } from 'modules/auth/auth.service';
 import { IUserAccessTokenPayload } from './user.interface';
@@ -17,8 +17,8 @@ import { RegisterUserInput } from './dto/register-user.input';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    @InjectModel(UserEntity.name)
+    private userModel: Model<UserEntity>,
     private readonly authService: AuthService,
   ) {}
 
@@ -27,7 +27,7 @@ export class UserService {
     const { email, password } = registerUserData;
     const lowerEmail = email.toLowerCase();
 
-    const user = await this.userRepository.findOne({
+    const user = await this.userModel.findOne({
       where: { email: lowerEmail },
       select: ['email'],
     });
@@ -41,8 +41,8 @@ export class UserService {
       email: lowerEmail,
       password: hashPasswordValue,
     };
-    const newUserData = this.userRepository.create(dataObject);
-    const newUser = await this.userRepository.save(newUserData);
+    const newUserData = new this.userModel(dataObject);
+    const newUser = await newUserData.save();
 
     const payload: IUserAccessTokenPayload = {
       email: newUser.email,
@@ -60,9 +60,12 @@ export class UserService {
   // login into the system
   async loginUser(email: string, password: string): Promise<any> {
     const user = await this.findByEmail(email.toLowerCase());
+    console.log(user);
     if (!user) {
       throw new UnauthorizedException(constant.PROVIDED_WRONG_EMAIL);
     }
+
+    console.log(email, password);
 
     const isValidPassword = await this.authService.comparePassword(
       password,
@@ -92,15 +95,16 @@ export class UserService {
     input: UpdateUserPersonalInfoInput,
     reqUser: UserEntity,
   ) {
-    if (reqUser.id !== id)
+    if (reqUser['_id'] !== id)
       throw new BadRequestException(constant.UNAUTHORIZED_OWNER_MESSAGE);
 
-    const user = await this.findbyId(id);
-    if (!user) throw new Error(constant.USER_NOT_EXIST);
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      input,
+      { new: true },
+    );
 
-    Object.assign(user, { ...input });
-
-    const updatedUser = await user.save();
+    if (!updatedUser) throw new Error(constant.USER_NOT_EXIST);
 
     const response: UpdateUserResponseDTO = {
       message: constant.UPDATE_USER_SUCCESSFUL,
@@ -110,20 +114,12 @@ export class UserService {
   }
 
   // find user by email when user exists
-  async findByEmail(email: string) {
-    return await UserEntity.findOne({
-      where: {
-        email: email,
-      },
-    });
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return await this.userModel.findOne({ email: email }).exec();
   }
 
   // find user by id when user exists
-  async findbyId(id: string) {
-    return await UserEntity.findOne({
-      where: {
-        id: id,
-      },
-    });
+  async findbyId(id: string): Promise<UserEntity | null> {
+    return await this.userModel.findById(id).exec();
   }
 }

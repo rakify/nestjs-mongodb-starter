@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from 'modules/user/user.entity';
+import { UserEntitySchema } from 'modules/user/user.entity';
 import { JWT_SECRET } from 'core/environments';
+import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    MongooseModule.forFeature([
+      { name: 'UserEntity', schema: UserEntitySchema },
+    ]),
     JwtModule.register({
       global: true,
       secret: JWT_SECRET,

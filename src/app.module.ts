@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MysqlDataSource } from './core/config/database.config';
-import { GraphQLConfig } from './core/config/graphql.config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './modules/user/user.module';
 import { AppResolver } from 'app.resolver';
+import { GraphQLConfig } from 'core/config/graphql.config';
 import { AuthModule } from 'modules/auth/auth.module';
+import { DB_CONNECTION } from 'core/environments';
+
 @Module({
   imports: [
-    TypeOrmModule.forRoot(MysqlDataSource),
+    MongooseModule.forRoot(DB_CONNECTION),
     GraphQLModule.forRoot(GraphQLConfig),
     UserModule,
     AuthModule,

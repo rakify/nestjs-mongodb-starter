@@ -1,7 +1,7 @@
 import { Seeder, DataFactory } from 'nestjs-seeder';
-import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 import { UserEntity } from 'modules/user/user.entity';
 import { DEFAULT_ADMIN_EMAIL } from 'core/environments';
@@ -10,8 +10,8 @@ import { UserAccessRole } from 'modules/user/user.interface';
 @Injectable()
 export default class GlobalSeeder implements Seeder {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectModel('UserEntity')
+    private readonly userModel: Model<UserEntity>,
   ) {}
 
   async seed(): Promise<any> {
@@ -35,41 +35,41 @@ export default class GlobalSeeder implements Seeder {
       firstName: 'Rakib',
       lastName: 'Miah',
       email: DEFAULT_ADMIN_EMAIL,
-      role: UserAccessRole.SuperAdmin,
+      accessRole: UserAccessRole.SuperAdmin,
     });
 
-    await this.userRepository.save(adminData);
+    await this.userModel.create(adminData);
 
     // Generate user seeds with accessRole of customer and save to database
     for (let i = 0; i < customerIdsLength; i++) {
       const userData = DataFactory.createForClass(UserEntity).generate(1, {
         id: customerIds[i],
-        role: UserAccessRole.Customer,
+        accessRole: UserAccessRole.Customer,
       });
-      await this.userRepository.save(userData);
+      await this.userModel.create(userData);
     }
 
     // Generate user seeds with accessRole of salesman and save to database
     for (let i = 0; i < salesmanIdsLength; i++) {
       const userData = DataFactory.createForClass(UserEntity).generate(1, {
         id: salesmanIds[i],
-        role: UserAccessRole.Salesman,
+        accessRole: UserAccessRole.Salesman,
       });
-      await this.userRepository.save(userData);
+      await this.userModel.create(userData);
     }
 
     // Generate user seeds with accessRole of admin and save to database
     for (let i = 0; i < adminIdsLength; i++) {
       const userData = DataFactory.createForClass(UserEntity).generate(1, {
         id: adminIds[i],
-        role: UserAccessRole.Admin,
+        accessRole: UserAccessRole.Admin,
       });
-      await this.userRepository.save(userData);
+      await this.userModel.create(userData);
     }
   }
 
-  // Drop the database
+  // Drop the collection
   async drop(): Promise<any> {
-    return Promise.all([this.userRepository.delete({})]);
+    return this.userModel.deleteMany({});
   }
 }
