@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { constant } from 'core/default';
-import { Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 @ObjectType()
-export class BaseFields {
-  @Field(() => Schema.Types.ObjectId)
+export class BaseFields extends Document {
+  @Field(() => String)
   _id: Schema.Types.ObjectId;
 
   @Field(() => Date)
