@@ -20,7 +20,7 @@ and run this project with this script:
 
 ## seed
 
-before starting seeding procedure make sure your project is built, then register an account for yourself, get the hashed password, go to user schema and finally update
+before starting seeding procedure make sure your project is built, then register an account for yourself, get the hashed password, go to user schema and update
 
     @Factory(
     '$2b$10$/3sioxoWNCCo3g/efr.cXuuXNvUWcPJM/PoBmKNVcHTaXtvgASF7C', // You have to make change here
