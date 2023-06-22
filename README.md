@@ -24,4 +24,4 @@ before starting seeding procedure make sure your project is built, then run this
 
 `npm run seed`
 
-All seed users has a default password that is : **1234**
+All seed users has a default password that is : **1234** (if your .env contains `JWT_SECRET=EC1781841236DED3CACAA1367A116`)
