@@ -2,20 +2,11 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UserAccessRole } from './user.interface';
 import { Factory } from 'nestjs-seeder';
-import { constant } from 'core/default';
 import { BaseFields } from 'modules/common/common.schema';
 
 @ObjectType({ description: 'user schema' })
 @Schema({ timestamps: true })
 export class User extends BaseFields {
-  @Field()
-  @Prop({ type: String, length: 36, default: constant.DEFAULT_USER })
-  createdBy: string;
-
-  @Field()
-  @Prop({ type: String, length: 36, default: constant.DEFAULT_USER })
-  updatedBy: string;
-
   @Factory((faker, ctx) =>
     ctx.firstName ? ctx.firstName : faker.name.firstName(),
   )
@@ -60,10 +51,6 @@ export class User extends BaseFields {
   @Field()
   @Prop({ type: Boolean, default: true })
   isActive: boolean;
-
-  @Field({ nullable: true })
-  @Prop({ type: String, length: 10, nullable: true })
-  country: string;
 
   @Field(() => UserAccessRole)
   @Prop({
