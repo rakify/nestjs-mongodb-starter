@@ -8,7 +8,7 @@ import { User } from './user.schema';
 // DTOS
 import { RegisterResponseDTO } from './dto/register-response.dto';
 import { RegisterUserInput } from './dto/register-user.input';
-import { LoginResponseDTO, ReturnUserData } from './dto/login-response.input';
+import { LoginResponseDTO, ReturnUserData } from './dto/login-response.dto';
 import { LogOutUserDTO } from './dto/logout-user.dto';
 import { UpdateUserResponseDTO } from './dto/update-user-response.dto';
 import { UpdateUserPersonalInfoInput } from './dto/update-user-personal-info.input';
