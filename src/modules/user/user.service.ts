@@ -8,12 +8,16 @@ import { User } from './user.schema';
 import { constant } from 'core/default';
 import { AuthService } from 'modules/auth/auth.service';
 import { IUserAccessTokenPayload } from './user.interface';
-import { UpdateUserPersonalInfoInput } from './dto/update-user-personal-info.input';
-import { UpdateUserResponseDTO } from './dto/update-user-response.dto';
-import { LoginResponseDTO, ReturnUserData } from './dto/login-response.dto';
-import { RegisterUserInput } from './dto/register-user.input';
 import { InjectModel } from '@nestjs/mongoose';
-import { RegisterResponseDTO } from './dto/register-response.dto';
+//DTOS
+import {
+  LoginResponseDTO,
+  RegisterResponseDTO,
+  RegisterUserInput,
+  ReturnUserData,
+  UpdateUserPersonalInfoInput,
+  UpdateUserResponseDTO,
+} from './dto';
 
 @Injectable()
 export class UserService {
@@ -90,11 +94,19 @@ export class UserService {
     return reqUser;
   }
 
-  // update user by id when user exists
+  // update logged in user personal info
   async updateUserPersonalInfo(
     input: UpdateUserPersonalInfoInput,
     reqUser: User,
   ): Promise<UpdateUserResponseDTO> {
+    // if input contains password hash it
+    if (input.password) {
+      const hashPasswordValue = await this.authService.hashPassword(
+        input.password,
+      );
+      input.password = hashPasswordValue;
+    }
+
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: reqUser._id },
       input,
@@ -110,12 +122,12 @@ export class UserService {
     return response;
   }
 
-  // find user by email when user exists
+  // find user by email
   async findByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({ email: email }).exec();
   }
 
-  // find user by id when user exists
+  // find user by id
   async findbyId(id: string): Promise<User | null> {
     return await this.userModel.findById(id).exec();
   }
