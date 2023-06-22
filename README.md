@@ -22,13 +22,10 @@ and run this project with this script:
 
 before starting seeding procedure make sure your project is built, then register an account for yourself, get the hashed password, go to user schema and finally update
 
-`@Factory(
+    **`@Factory(
     '$2b$10$/3sioxoWNCCo3g/efr.cXuuXNvUWcPJM/PoBmKNVcHTaXtvgASF7C', // You have to make change here
-  )
-  @Field()
-  @Prop({ type: String, required: true })
-  password: string;
- `
+    )`**
+
 this is going to be default password for all seed users.
 finally run this script:
 
