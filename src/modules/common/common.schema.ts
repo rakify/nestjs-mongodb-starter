@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop } from '@nestjs/mongoose';
 import { constant } from 'core/default';
-import { Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 @ObjectType()
-export class BaseFields {
-  @Field(() => Schema.Types.ObjectId)
+export class BaseFields extends Document {
+  @Field(() => String)
   _id: Schema.Types.ObjectId;
 
   @Field(() => Date)
@@ -14,13 +14,11 @@ export class BaseFields {
   @Field(() => Date)
   updatedAt: Date;
 
-  @Field()
-  @Prop({ type: String, length: 36, default: constant.DEFAULT_USER })
+  @Field({ description: 'contains the user id who created this entry.' })
+  @Prop({ type: String, default: constant.DEFAULT_USER })
   createdBy: string;
 
-  @Field()
-  @Prop({ type: String, length: 36, default: constant.DEFAULT_USER })
+  @Field({ description: 'contains the user id who updated this entry.' })
+  @Prop({ type: String, default: constant.DEFAULT_USER })
   updatedBy: string;
 }
-
-export const BaseFieldsSchema = SchemaFactory.createForClass(BaseFields);
