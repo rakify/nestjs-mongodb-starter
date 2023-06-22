@@ -8,6 +8,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
+import { validationConstant } from 'core/default';
 
 @InputType()
 export class UpdateUserPersonalInfoInput {
@@ -15,11 +16,11 @@ export class UpdateUserPersonalInfoInput {
   @ValidateIf((_, value) => value !== undefined)
   @IsDefined({
     // if it is defined but as null
-    message: 'Email can not be set as null',
+    message: validationConstant.PROVIDED_NULL_EMAIL,
   })
   @IsEmail()
   @MaxLength(100, {
-    message: 'Email address is too long',
+    message: validationConstant.PROVIDED_TOO_LONG_EMAIL,
   })
   email: string;
 
@@ -27,23 +28,23 @@ export class UpdateUserPersonalInfoInput {
   @ValidateIf((_, value) => value !== undefined)
   @IsDefined({
     // if it is defined but as null
-    message: 'Password can not be set as null',
+    message: validationConstant.PROVIDED_NULL_PASSWORD,
   })
   @MinLength(4, {
-    message: 'Password must contain atleast 4 characters',
+    message: validationConstant.PROVIDED_TOO_SMALL_PASSWORD,
   })
-  @MaxLength(50, {
-    message: 'Password can not be greater than 50 characters',
+  @MaxLength(100, {
+    message: validationConstant.PROVIDED_TOO_LONG_PASSWORD,
   })
   password: string;
 
   @Field({ nullable: true, description: 'user input value for FirstName' })
   @ValidateIf((_, value) => value !== undefined && value !== null)
   @MinLength(2, {
-    message: 'First name must contain at least 2 characters',
+    message: validationConstant.PROVIDED_TOO_SMALL_FIRSTNAME,
   })
   @MaxLength(50, {
-    message: 'First name can not contain more than 50 characters',
+    message: validationConstant.PROVIDED_TOO_LONG_FIRSTNAME,
   })
   firstName: string;
 
@@ -51,10 +52,10 @@ export class UpdateUserPersonalInfoInput {
   @ValidateIf((_, value) => value !== undefined && value !== null)
   @IsString()
   @MinLength(2, {
-    message: 'Last name must contain at least 2 characters',
+    message: validationConstant.PROVIDED_TOO_SMALL_LASTNAME,
   })
   @MaxLength(50, {
-    message: 'Last name can not contain more than 50 characters',
+    message: validationConstant.PROVIDED_TOO_LONG_LASTNAME,
   })
   lastName: string;
 
@@ -62,7 +63,7 @@ export class UpdateUserPersonalInfoInput {
   @ValidateIf((_, value) => value !== undefined && value !== null)
   @IsUrl()
   @MaxLength(400, {
-    message: 'Avatar Link is too long',
+    message: validationConstant.PROVIDED_TOO_LONG_AVATARLINK,
   })
   avatarLink: string;
 
@@ -70,7 +71,7 @@ export class UpdateUserPersonalInfoInput {
   @ValidateIf((_, value) => value !== undefined && value !== null)
   @IsUrl()
   @MaxLength(400, {
-    message: 'Cover Link is too long',
+    message: validationConstant.PROVIDED_TOO_LONG_COVERLINK,
   })
   coverLink: string;
 }
