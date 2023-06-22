@@ -20,8 +20,16 @@ and run this project with this script:
 
 ## seed
 
-before starting seeding procedure make sure your project is built, then run this script:
+before starting seeding procedure make sure your project is built, then register an account for yourself, get the hashed password, go to user schema and finally update
+
+`@Factory(
+    '$2b$10$/3sioxoWNCCo3g/efr.cXuuXNvUWcPJM/PoBmKNVcHTaXtvgASF7C', // You have to make change here
+  )
+  @Field()
+  @Prop({ type: String, required: true })
+  password: string;
+ `
+this is going to be default password for all seed users.
+finally run this script:
 
 `npm run seed`
-
-All seed users has a default password that is : **1234** (if your .env contains `JWT_SECRET=EC1781841236DED3CACAA1367A116`)
