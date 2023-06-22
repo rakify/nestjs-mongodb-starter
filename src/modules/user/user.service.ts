@@ -1,7 +1,6 @@
 import { Model } from 'mongoose';
 import {
   BadRequestException,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,25 +10,30 @@ import { AuthService } from 'modules/auth/auth.service';
 import { IUserAccessTokenPayload } from './user.interface';
 import { UpdateUserPersonalInfoInput } from './dto/update-user-personal-info.input';
 import { UpdateUserResponseDTO } from './dto/update-user-response.dto';
-import { ReturnUserData } from './dto/login-response.input';
+import { LoginResponseDTO, ReturnUserData } from './dto/login-response.input';
 import { RegisterUserInput } from './dto/register-user.input';
+import { InjectModel } from '@nestjs/mongoose';
+import { RegisterResponseDTO } from './dto/register-response.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject('USER') private readonly userModel: Model<User>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly authService: AuthService,
   ) {}
 
   // register the user into the system
-  async registerUser(registerUserData: RegisterUserInput): Promise<any> {
+  async registerUser(
+    registerUserData: RegisterUserInput,
+  ): Promise<RegisterResponseDTO> {
     const { email, password } = registerUserData;
     const lowerEmail = email.toLowerCase();
 
-    const user = await this.userModel.findOne({
-      where: { email: lowerEmail },
-      select: ['email'],
-    });
+    const user = await this.userModel.findOne(
+      { email: lowerEmail },
+      { email: 1 },
+    );
+
     if (user && user.email) {
       throw new BadRequestException(constant.USER_ALREADY_EXIST);
     }
@@ -57,14 +61,11 @@ export class UserService {
   }
 
   // login into the system
-  async loginUser(email: string, password: string): Promise<any> {
+  async loginUser(email: string, password: string): Promise<LoginResponseDTO> {
     const user = await this.findByEmail(email.toLowerCase());
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException(constant.PROVIDED_WRONG_EMAIL);
     }
-
-    console.log(email, password);
 
     const isValidPassword = await this.authService.comparePassword(
       password,
@@ -92,7 +93,7 @@ export class UserService {
   async updateUserPersonalInfo(
     input: UpdateUserPersonalInfoInput,
     reqUser: User,
-  ) {
+  ): Promise<UpdateUserResponseDTO> {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: reqUser._id },
       input,

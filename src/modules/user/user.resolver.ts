@@ -54,7 +54,7 @@ export class UserResolver {
   ): Promise<UpdateUserResponseDTO> {
     return this.userService.updateUserPersonalInfo(input, reqUser);
   }
-  // logout from the system
+  // logout user from the system
   @Query(() => LogOutUserDTO, { description: 'logout to the system' })
   logoutUser(): LogOutUserDTO {
     return { Message: constant.LOGOUT_SUCCESSFUL };
