@@ -27,6 +27,7 @@ export class UserService {
     registerUserData: RegisterUserInput,
   ): Promise<RegisterResponseDTO> {
     const { email, password } = registerUserData;
+
     const lowerEmail = email.toLowerCase();
 
     const user = await this.userModel.findOne(
