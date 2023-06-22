@@ -94,7 +94,7 @@ export class UserService {
     return reqUser;
   }
 
-  // update user by id when user exists
+  // update logged in user personal info
   async updateUserPersonalInfo(
     input: UpdateUserPersonalInfoInput,
     reqUser: User,
@@ -122,12 +122,12 @@ export class UserService {
     return response;
   }
 
-  // find user by email when user exists
+  // find user by email
   async findByEmail(email: string): Promise<User | null> {
     return await this.userModel.findOne({ email: email }).exec();
   }
 
-  // find user by id when user exists
+  // find user by id
   async findbyId(id: string): Promise<User | null> {
     return await this.userModel.findById(id).exec();
   }
