@@ -6,12 +6,15 @@ import { AuthGuard } from 'modules/auth/guards/auth.guard';
 import { CurrentUser } from 'modules/auth/decorator/current-user.decoder';
 import { User } from './user.schema';
 // DTOS
-import { RegisterResponseDTO } from './dto/register-response.dto';
-import { RegisterUserInput } from './dto/register-user.input';
-import { LoginResponseDTO, ReturnUserData } from './dto/login-response.dto';
-import { LogOutUserDTO } from './dto/logout-user.dto';
-import { UpdateUserResponseDTO } from './dto/update-user-response.dto';
-import { UpdateUserPersonalInfoInput } from './dto/update-user-personal-info.input';
+import {
+  LoginResponseDTO,
+  LogoutResponseDTO,
+  RegisterResponseDTO,
+  RegisterUserInput,
+  ReturnUserData,
+  UpdateUserPersonalInfoInput,
+  UpdateUserResponseDTO,
+} from './dto';
 
 @Resolver()
 export class UserResolver {
@@ -55,8 +58,8 @@ export class UserResolver {
     return this.userService.updateUserPersonalInfo(input, reqUser);
   }
   // logout user from the system
-  @Query(() => LogOutUserDTO, { description: 'logout to the system' })
-  logoutUser(): LogOutUserDTO {
+  @Query(() => LogoutResponseDTO, { description: 'logout to the system' })
+  logoutUser(): LogoutResponseDTO {
     return { Message: constant.LOGOUT_SUCCESSFUL };
   }
 }

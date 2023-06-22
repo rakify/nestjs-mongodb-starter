@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class LogOutUserDTO {
+export class LogoutResponseDTO {
   @Field()
   Message: string;
 }
