@@ -95,6 +95,14 @@ export class UserService {
     input: UpdateUserPersonalInfoInput,
     reqUser: User,
   ): Promise<UpdateUserResponseDTO> {
+    // if input contains password hash it
+    if (input.password) {
+      const hashPasswordValue = await this.authService.hashPassword(
+        input.password,
+      );
+      input.password = hashPasswordValue;
+    }
+
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: reqUser._id },
       input,
