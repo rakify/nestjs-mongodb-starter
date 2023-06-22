@@ -8,12 +8,16 @@ import { User } from './user.schema';
 import { constant } from 'core/default';
 import { AuthService } from 'modules/auth/auth.service';
 import { IUserAccessTokenPayload } from './user.interface';
-import { UpdateUserPersonalInfoInput } from './dto/update-user-personal-info.input';
-import { UpdateUserResponseDTO } from './dto/update-user-response.dto';
-import { LoginResponseDTO, ReturnUserData } from './dto/login-response.dto';
-import { RegisterUserInput } from './dto/register-user.input';
 import { InjectModel } from '@nestjs/mongoose';
-import { RegisterResponseDTO } from './dto/register-response.dto';
+//DTOS
+import {
+  LoginResponseDTO,
+  RegisterResponseDTO,
+  RegisterUserInput,
+  ReturnUserData,
+  UpdateUserPersonalInfoInput,
+  UpdateUserResponseDTO,
+} from './dto';
 
 @Injectable()
 export class UserService {
