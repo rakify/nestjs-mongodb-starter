@@ -3,14 +3,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UserAccessRole } from './user.interface';
 import { Factory } from 'nestjs-seeder';
 import { constant } from 'core/default';
-import { Schema as MongoSchema } from 'mongoose';
+import { Document } from 'mongoose';
+import { BaseFieldsSchema } from 'modules/common/common.schema';
 
 @ObjectType({ description: 'user schema' })
 @Schema({ timestamps: true })
-export class User {
-  @Field(() => String)
-  _id: MongoSchema.Types.ObjectId;
-
+export class User extends Document {
   @Field()
   @Prop({ type: String, length: 36, default: constant.DEFAULT_USER })
   createdBy: string;
@@ -77,4 +75,5 @@ export class User {
   accessRole: UserAccessRole;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema =
+  SchemaFactory.createForClass(User).add(BaseFieldsSchema);
