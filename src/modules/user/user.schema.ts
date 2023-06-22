@@ -29,10 +29,7 @@ export class User extends BaseFields {
   email: string;
 
   @Factory(
-    (faker, ctx) =>
-      ctx.password
-        ? ctx.password
-        : '$2b$10$/3sioxoWNCCo3g/efr.cXuuXNvUWcPJM/PoBmKNVcHTaXtvgASF7C', //1234
+    '$2b$10$/3sioxoWNCCo3g/efr.cXuuXNvUWcPJM/PoBmKNVcHTaXtvgASF7C', // You have to make change here
   )
   @Field()
   @Prop({ type: String, required: true })
