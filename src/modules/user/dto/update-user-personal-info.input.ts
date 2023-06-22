@@ -11,7 +11,7 @@ import {
 @InputType()
 export class UpdateUserPersonalInfoInput {
   @Field({ nullable: true, description: 'user input value for Email' })
-  @ValidateIf((_, value) => value !== undefined && value !== null)
+  @ValidateIf((_, value) => value !== undefined)
   @IsEmail()
   @MaxLength(100, {
     message: 'Email address is too long',
@@ -19,7 +19,7 @@ export class UpdateUserPersonalInfoInput {
   email: string;
 
   @Field({ nullable: true, description: 'user input value for Password' })
-  @ValidateIf((_, value) => value !== undefined && value !== null)
+  @ValidateIf((_, value) => value !== undefined)
   @IsString()
   @MinLength(4, {
     message: 'Password is too short',
